@@ -6,5 +6,5 @@ public class Permission
     public string Name { get; set; } = null!;
     
     // Navigation property
-    public List<UserRole> UserRoles { get; set; } = new();
+    public virtual  List<UserRole> UserRoles { get; set; } = new();
 }

@@ -1,6 +1,5 @@
 using System.Text;
 using Api.Endpoints;
-using Api.Middleware;
 using Infrastructure;
 using Infrastructure.Persistance;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,6 +8,8 @@ using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddEndpointsApiExplorer();
 
 /*Authentication*/
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -62,8 +63,6 @@ if (app.Environment.IsDevelopment())
 // ✅ Enable authentication
 app.UseAuthentication();
 app.UseAuthorization();
-
-
 
 // Endpoint mapping
 app.MapBoardEndpoints();

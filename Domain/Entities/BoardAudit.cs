@@ -14,8 +14,8 @@ public class BoardAudit
     public DateTime ModifiedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation properties
-    public Board Board { get; set; } = null!;
-    public User User { get; set; } = null!;
+    public virtual  Board Board { get; set; } = null!;
+    public virtual User User { get; set; } = null!;
 }
 
 public enum ActionEnum

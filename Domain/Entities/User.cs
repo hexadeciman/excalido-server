@@ -11,6 +11,6 @@ public class User
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation properties
-    public List<UserRole> UserRoles { get; set; } = new();  // 🔹 **FIXED: Add missing relationship**
-    public List<ShareEntity> SharedEntities { get; set; } = new();
+    public virtual  List<UserRole> UserRoles { get; set; } = new();  // 🔹 **FIXED: Add missing relationship**
+    public virtual List<ShareEntity> SharedEntities { get; set; } = new();
 }

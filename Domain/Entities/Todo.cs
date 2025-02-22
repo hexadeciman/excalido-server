@@ -15,9 +15,9 @@ public class Todo
     public DateTime ModifiedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation properties
-    public ListEntity List { get; set; } = null!;
-    public Todo? ParentTodo { get; set; }
-    public List<Todo> SubTodos { get; set; } = new();
+    public virtual ListEntity List { get; set; }
+    public virtual Todo? ParentTodo { get; set; }
+    public virtual List<Todo> SubTodos { get; set; } = new();
 }
 
 public enum TodoStatusEnum

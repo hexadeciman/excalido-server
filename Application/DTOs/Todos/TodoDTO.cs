@@ -7,6 +7,8 @@ public class TodoDTO
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
     public string Status { get; set; } = "unchecked";
+
+    public int OrderIndex { get; set; } = 0;
     public DateTime CreatedAt { get; set; }
     public DateTime ModifiedAt { get; set; }
 }

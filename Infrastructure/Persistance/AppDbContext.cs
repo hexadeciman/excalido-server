@@ -18,6 +18,7 @@ public class AppDbContext : DbContext
     private readonly IConfiguration _configuration;
 
 
+    public AppDbContext() {}
     public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration)
         : base(options)
     {
@@ -31,6 +32,7 @@ public class AppDbContext : DbContext
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
             optionsBuilder.UseNpgsql(connectionString);
         }
+        optionsBuilder.UseLazyLoadingProxies(); // ✅ Enable Lazy Loading
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

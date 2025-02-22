@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class BoardRepository(AppDbContext context) : IBoardRepository
+public class BoardRepository(AppDbContext context, IUserRepository userRepository) : IBoardRepository
 {
     public async Task<Board> AddBoardAsync(Board board)
     {
@@ -36,6 +36,15 @@ public class BoardRepository(AppDbContext context) : IBoardRepository
     public async Task<Board?> GetBoardByIdAsync(int id)
     {
         return await context.Boards.FindAsync(id);
+    }
+    
+    public async Task<Board> GetBoardForUserAsync(int boardId, string username)
+    {
+        var user = await userRepository.GetByUsernameAsync(username);
+        if(user == null) throw new Exception("User not found");
+        var board = await context.Boards.FirstOrDefaultAsync(b => b.Id == boardId && b.OwnerId == user.Id);
+        if (board == null) throw new Exception("Board not found or does not belong to the user");
+        return board;
     }
 
     public async Task<List<Board>> GetAllBoardsAsync()

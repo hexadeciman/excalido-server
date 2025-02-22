@@ -16,10 +16,10 @@ public static class DependencyInjection
             options.UseNpgsql(connectionString));
 
         // Register repositories
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITodoRepository, TodoRepository>();
         services.AddScoped<IBoardRepository, BoardRepository>();
         services.AddScoped<ITodoListRepository, TodoListRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         
         // Register services

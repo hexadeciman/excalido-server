@@ -9,7 +9,7 @@ public class Board
     public bool IsArchived { get; set; } = false;
 
     // Navigation properties
-    public User Owner { get; set; } = null!;
-    public List<ListEntity> Lists { get; set; } = new();
-    public List<BoardAudit> AuditLogs { get; set; } = new();
+    public virtual User Owner { get; set; } = null!;
+    public virtual List<ListEntity> Lists { get; set; } = new();
+    public virtual List<BoardAudit> AuditLogs { get; set; } = new();
 }

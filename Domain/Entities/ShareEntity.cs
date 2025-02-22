@@ -12,7 +12,7 @@ public class ShareEntity
     public bool IsDeleted { get; set; } = false;
 
     // Navigation properties
-    public EntityType EntityType { get; set; } = null!;
-    public User? User { get; set; }
-    public Permission Permission { get; set; } = null!;
+    public virtual  EntityType EntityType { get; set; } = null!;
+    public virtual User? User { get; set; }
+    public virtual Permission Permission { get; set; } = null!;
 }

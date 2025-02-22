@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Domain.Entities;
 
 public class ListEntity
@@ -13,6 +15,8 @@ public class ListEntity
     public DateTime ModifiedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation properties
-    public Board Board { get; set; } = null!;
-    public List<Todo> Todos { get; set; } = new();
+    public virtual Board Board { get; set; } = null!;
+    
+    [JsonIgnore]
+    public virtual List<Todo> Todos { get; set; } = new();
 }

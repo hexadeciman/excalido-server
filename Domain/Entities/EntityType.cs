@@ -6,5 +6,5 @@ public class EntityType
     public string Name { get; set; } = null!;
 
     // Navigation property (shared entities of this type)
-    public List<ShareEntity> SharedEntities { get; set; } = new();
+    public virtual  List<ShareEntity> SharedEntities { get; set; } = new();
 }
