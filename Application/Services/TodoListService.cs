@@ -1,4 +1,5 @@
 using Application.DTOs;
+using Application.DTOs.Board;
 using Application.DTOs.TodoList;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
@@ -63,6 +64,36 @@ public class TodoListService(ITodoListRepository todoListRepository)
                     Status = $"{t.Status}",
                     OrderIndex = t.OrderIndex
                 }).OrderBy(t => t.OrderIndex).ToList()
+            }).OrderBy(l => l.CreatedAt).ToList();
+        }
+        
+        public async Task<List<BoardWithTodoListWithTodosDTO>> GetBoardsAndTodoListsAsync(string username)
+        {
+            var todoLists = await todoListRepository.GetAllTodoListsAsync(username);
+            return todoLists.Select(board => new BoardWithTodoListWithTodosDTO
+            {
+                Id = board.Id,
+                Name = board.Name,
+                Description = board.Description,
+                TodoLists = board.Lists.Select( l => new TodoListWithTodosDTO
+                {
+                    Id = l.Id,
+                    Name = l.Name,
+                    BoardId = l.BoardId,
+                    CreatedAt = l.CreatedAt,
+                    ModifiedAt = l.ModifiedAt,
+                    Todos = l.Todos.Select( t => new TodoDTO
+                    {
+                        Id = t.Id,
+                        Name = t.Name,
+                        CreatedAt = t.CreatedAt,
+                        Description = t.Description,
+                        ListId = t.ListId,
+                        ModifiedAt = t.ModifiedAt,
+                        Status = $"{t.Status}",
+                        OrderIndex = t.OrderIndex
+                    }).OrderBy(t => t.OrderIndex).ToList()
+                }).ToList()
             }).ToList();
         }
 

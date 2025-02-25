@@ -19,7 +19,6 @@ namespace Application.Services;
             {
                 Name = dto.Name,
                 Description = dto.Description,
-                OwnerId = dto.OwnerId,
                 IsArchived = false,
             };
 
@@ -35,9 +34,9 @@ namespace Application.Services;
             };
         }
 
-        public async Task<BoardDTO?> GetBoardByIdAsync(int id)
+        public async Task<BoardDTO?> GetBoardByIdAsync(int id, string username)
         {
-            var board = await _boardRepository.GetBoardByIdAsync(id);
+            var board = await _boardRepository.GetBoardByIdAsync(id, username);
             return board == null ? null : new BoardDTO
             {
                 Id = board.Id,
@@ -45,6 +44,25 @@ namespace Application.Services;
                 Description = board.Description,
                 OwnerId = board.OwnerId,
                 IsArchived = board.IsArchived,
+            };
+        }
+        
+        public async Task<BoardDTO?> UpdateBoardAsync(UpdateBoardDTO request, string username)
+        {
+            var board = await _boardRepository.GetBoardByIdAsync(request.Id, username);
+            if (board is null)
+            {
+                return null;
+            }
+            board.Name = request.Name;
+            var updatedBoard = await _boardRepository.UpdateBoardAsync(board);
+            return updatedBoard == null ? null : new BoardDTO
+            {
+                Id = updatedBoard.Id,
+                Name = updatedBoard.Name,
+                Description = updatedBoard.Description,
+                OwnerId = updatedBoard.OwnerId,
+                IsArchived = updatedBoard.IsArchived,
             };
         }
 

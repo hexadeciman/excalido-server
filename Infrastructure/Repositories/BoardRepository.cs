@@ -26,6 +26,7 @@ public class BoardRepository(AppDbContext context, IUserRepository userRepositor
         return board;
     }
 
+
     public async Task<List<Board>> GetBoardsAsync(string username)
     {
         return await context.Boards
@@ -33,9 +34,9 @@ public class BoardRepository(AppDbContext context, IUserRepository userRepositor
             .ToListAsync();
     }
     
-    public async Task<Board?> GetBoardByIdAsync(int id)
+    public async Task<Board?> GetBoardByIdAsync(int id, string username)
     {
-        return await context.Boards.FindAsync(id);
+        return await context.Boards.Where(b => b.Owner.Username == username && b.Id == id).FirstOrDefaultAsync();
     }
     
     public async Task<Board> GetBoardForUserAsync(int boardId, string username)
@@ -59,7 +60,8 @@ public class BoardRepository(AppDbContext context, IUserRepository userRepositor
         var existingBoard = await context.Boards.FindAsync(board.Id);
         if (existingBoard == null) return null;
 
-        context.Entry(existingBoard).CurrentValues.SetValues(board);
+        existingBoard.Name = board.Name;
+        context.Boards.Update(existingBoard);
         await context.SaveChangesAsync();
         return existingBoard;
     }

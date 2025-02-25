@@ -1,4 +1,5 @@
 using Api.Middleware;
+using Application.DTOs.Board;
 using Application.DTOs.TodoList;
 using Application.Services;
 namespace Api.Endpoints;
@@ -21,12 +22,20 @@ public static class TodoListEndpoints
             return Results.Ok(todoList);
         }).Produces<List<TodoListDTO>>(200).Produces(401).Produces(500);
 
-        group.MapGet("/", async (int boardId, TodoListService todoListService, HttpContext httpContext) =>
+        group.MapGet("/{boardId:int}", async (int boardId, TodoListService todoListService, HttpContext httpContext) =>
         {
             var username = httpContext.Items["Username"] as string;
             var todoLists = await todoListService.GetAllTodoListsAsync(boardId, username!);
             return Results.Ok(todoLists);
         }).Produces<List<TodoListWithTodosDTO>>(200).Produces(401).Produces(500);;
+
+        group.MapGet("/", async (TodoListService todoListService, HttpContext httpContext) =>
+        {
+            var username = httpContext.Items["Username"] as string;
+            var boardWithTodoLists = await todoListService.GetBoardsAndTodoListsAsync(username!);
+            return Results.Ok(boardWithTodoLists);
+        }).Produces<List<BoardWithTodoListWithTodosDTO>>(200).Produces(401).Produces(500);;
+
         
         group.MapPut("/", async (int todoListId, UpdateTodoListDTO request, TodoListService todoListService, HttpContext httpContext) =>
         {

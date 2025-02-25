@@ -49,6 +49,11 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
         
+        public async Task<List<Board>> GetAllTodoListsAsync(string username) => await context.Boards
+                .Where(b => b.Owner.Username == username)
+                .Include(b => b.Lists)
+                .ToListAsync();
+        
         public async Task<ListEntity> UpdateTodoListAsync(ListEntity todoList, string username)
         {
             await boardRepository.GetBoardForUserAsync(todoList.BoardId, username);
