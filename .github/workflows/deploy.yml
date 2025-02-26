@@ -21,6 +21,9 @@ jobs:
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
 
+      - name: Create Deployment Archive
+        run: tar -cvf deploy.tar .
+
       - name: Deploy to CapRover
         uses: caprover/deploy-from-github@main
         with:
