@@ -36,7 +36,7 @@ services:
 
 volumes:
   db_postgres_data:
-    name: db_postgres_data # ✅ Explicitly set the volume name
+    name: db_postgres_data # ✅   Explicitly set the volume name
 
 networks:
   taskflow_network:
