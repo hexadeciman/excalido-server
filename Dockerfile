@@ -23,5 +23,11 @@ FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/out .
 
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV DOTNET_NOLOGO=true
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+
+EXPOSE 7272
+
 # Run the API
 ENTRYPOINT ["dotnet", "Api.dll"]
