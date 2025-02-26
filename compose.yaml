@@ -1,12 +1,43 @@
-﻿services:
-  api:
-    image: api
-    build:
-      context: .
-      dockerfile: Api/Dockerfile
+﻿version: "3.8"
 
-  infrastructure:
-    image: infrastructure
+services:
+  api:
     build:
       context: .
-      dockerfile: Infrastructure/Dockerfile
+      dockerfile: Dockerfile
+    ports:
+      - "7272:7272"
+    environment:
+      DEFAULT_CONNECTION: ${DEFAULT_CONNECTION}
+      JWT_SECRET: ${JWT_SECRET}
+      DOTNET_NOLOGO: "true"
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: "1"
+      ASPNETCORE_ENVIRONMENT: "Production"
+    depends_on:
+      - postgres
+    networks:
+      - taskflow_network
+    restart: always
+
+  postgres:
+    image: postgres:16
+    container_name: taskflow-db
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_postgres_data:/var/lib/postgresql/data
+    networks:
+      - taskflow_network
+
+volumes:
+  db_postgres_data:
+    name: db_postgres_data # ✅ Explicitly set the volume name
+
+networks:
+  taskflow_network:
+    driver: bridge

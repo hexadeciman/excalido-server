@@ -55,7 +55,7 @@ namespace Application.Services;
         private string GenerateJwtToken(User user)
         {
             var jwtSettings = configuration.GetSection("JwtSettings");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Secret"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET")!));
 
             var claims = new[]
             {
