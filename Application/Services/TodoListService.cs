@@ -53,6 +53,7 @@ public class TodoListService(ITodoListRepository todoListRepository)
                 BoardId = todoList.BoardId,
                 CreatedAt = todoList.CreatedAt,
                 ModifiedAt = todoList.ModifiedAt,
+                OrderIndex = todoList.XPosition,
                 Todos = todoList.Todos.Select( t => new TodoDTO
                 {
                     Id = t.Id,
@@ -64,7 +65,7 @@ public class TodoListService(ITodoListRepository todoListRepository)
                     Status = $"{t.Status}",
                     OrderIndex = t.OrderIndex
                 }).OrderBy(t => t.OrderIndex).ToList()
-            }).OrderBy(l => l.CreatedAt).ToList();
+            }).OrderBy(l => l.OrderIndex).ToList();
         }
         
         public async Task<List<BoardWithTodoListWithTodosDTO>> GetBoardsAndTodoListsAsync(string username)
@@ -115,7 +116,20 @@ public class TodoListService(ITodoListRepository todoListRepository)
                 ModifiedAt = updatedTodoList.ModifiedAt
             };
         }
-
+        
+        public async Task<TodoListDTO?> ReorderTodoListAsync(int id, int newIndex, string username)
+        {
+            var updatedTodoList = await todoListRepository.ReorderTodoListAsync(id, newIndex, username);
+            return new TodoListDTO
+            {
+                Id = updatedTodoList.Id,
+                Name = updatedTodoList.Name,
+                BoardId = updatedTodoList.BoardId,
+                CreatedAt = updatedTodoList.CreatedAt,
+                ModifiedAt = updatedTodoList.ModifiedAt
+            };
+        }
+        
         public async Task<bool> DeleteTodoListAsync(int id, string username)
         {
             var modifiedTodoList = await todoListRepository.GetTodoListByIdAsync(id, username);

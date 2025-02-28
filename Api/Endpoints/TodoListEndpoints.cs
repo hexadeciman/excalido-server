@@ -44,6 +44,13 @@ public static class TodoListEndpoints
             return updatedTodoList is not null ? Results.Ok(updatedTodoList) : Results.NotFound();
         }).Produces<TodoListDTO>(200).Produces(401).Produces(500);
 
+        group.MapPut("/reorder", async (int todoListId, int newIndex, TodoListService todoListService, HttpContext httpContext) =>
+        {
+            var username = httpContext.Items["Username"] as string;
+            var updatedTodoList = await todoListService.ReorderTodoListAsync(todoListId, newIndex, username!);
+            return updatedTodoList is not null ? Results.Ok(updatedTodoList) : Results.NotFound();
+        }).Produces<TodoListDTO>(200).Produces(401).Produces(500);
+
         group.MapDelete("/", async (int id, TodoListService todoListService, HttpContext httpContext) =>
         {
             var username = httpContext.Items["Username"] as string;

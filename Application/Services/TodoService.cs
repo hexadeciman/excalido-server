@@ -27,7 +27,7 @@ public class TodoService
             ModifiedAt = DateTime.UtcNow
         };
 
-        var createdTodo = await _todoRepository.AddTodoAsync(todo);
+        var createdTodo = await _todoRepository.AddTodoAsync(todo, dto.Index);
 
         return new TodoDTO
         {

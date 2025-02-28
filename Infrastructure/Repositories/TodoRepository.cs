@@ -14,19 +14,25 @@ public class TodoRepository : ITodoRepository
         _context = context;
     }
 
-    public async Task<Todo> AddTodoAsync(Todo todo)
+    public async Task<Todo> AddTodoAsync(Todo todo, int? index)
     {
-        // ✅ Get the highest orderIndex in the list
-        int maxOrderIndex = await _context.Todos
+        // Get the highest orderIndex in the list
+        var maxOrderIndex = await _context.Todos
             .Where(t => t.ListId == todo.ListId)
-            .Select(t => (int?)t.OrderIndex) // Handle cases where the list is empty
-            .MaxAsync() ?? 0; // If no todos exist, start from 0
+            .Select(t => (int?)t.OrderIndex)
+            .MaxAsync() ?? -1; // start from -1 so that the first todo gets index 0
 
-        // ✅ Assign the next orderIndex
+        // Append the new todo at the end
         todo.OrderIndex = maxOrderIndex + 1;
-
         _context.Todos.Add(todo);
         await _context.SaveChangesAsync();
+
+        // If an insertion index is specified, reposition the newly added todo
+        if (!index.HasValue) return todo;
+        // Clamp the index to be within valid bounds (0 to count)
+        var clampedIndex = Math.Clamp(index.Value + 1, 0, maxOrderIndex + 1);
+        await ReorderTodos(todo.ListId, todo.OrderIndex, clampedIndex);
+
         return todo;
     }
 

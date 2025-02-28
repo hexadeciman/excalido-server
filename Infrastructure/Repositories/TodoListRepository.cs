@@ -69,5 +69,46 @@ namespace Infrastructure.Repositories
             await context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<ListEntity> ReorderTodoListAsync(int id, int newIndex, string username)
+        {
+            // Fetch the todo list and ensure the user has access
+            var todoList = await context.Lists
+                .Include(l => l.Board)
+                .ThenInclude(b => b.Owner)
+                .FirstOrDefaultAsync(l => l.Id == id && l.Board.Owner.Username == username);
+
+            if (todoList == null)
+                throw new Exception("Todo list not found or access denied");
+
+            // Fetch all lists for the board in order
+            var lists = await context.Lists
+                .Where(l => l.BoardId == todoList.BoardId)
+                .OrderBy(l => l.XPosition)
+                .ToListAsync();
+
+            var oldIndex = lists.FindIndex(l => l.Id == id);
+            if (oldIndex == -1)
+                throw new Exception("Todo list not found in ordering");
+
+            // Ensure the new index is within bounds
+            newIndex = Math.Clamp(newIndex, 0, lists.Count - 1);
+
+            // Remove the list from its old position
+            lists.RemoveAt(oldIndex);
+
+            // Insert it at the new position
+            lists.Insert(newIndex, todoList);
+
+            // Reassign order indexes
+            for (var i = 0; i < lists.Count; i++)
+            {
+                lists[i].XPosition = i;
+                context.Lists.Update(lists[i]); // ✅ Explicitly mark the entity as updated
+            }
+
+            await context.SaveChangesAsync();
+            return todoList;
+        }
     }
 }
