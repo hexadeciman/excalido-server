@@ -7,6 +7,8 @@ public class Board
     public string? Description { get; set; }
     public Guid OwnerId { get; set; }
     public bool IsArchived { get; set; } = false;
+    
+    public int OrderIndex { get; set; }
 
     // Navigation properties
     public virtual User Owner { get; set; } = null!;

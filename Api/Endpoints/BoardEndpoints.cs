@@ -42,7 +42,13 @@ public static class BoardEndpoints
             var board = await boardService.UpdateBoardAsync(request, username!);
             return board is not null ? Results.Ok(board) : Results.NotFound();
         }).Produces<BoardDTO>().Produces(401).Produces(500);
-
+        
+        group.MapDelete("/", async (int id, BoardService boardService, HttpContext httpContext) =>
+        {
+            var username = httpContext.Items["Username"] as string;
+            var deleted = await boardService.DeleteBoardAsync(id, username!);
+            return deleted ? Results.NoContent() : Results.NotFound();
+        }).Produces<bool>(200).Produces(401).Produces(500);
     }
 }
 

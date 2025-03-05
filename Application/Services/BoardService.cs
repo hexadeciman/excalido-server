@@ -54,8 +54,9 @@ namespace Application.Services;
             {
                 return null;
             }
-            board.Name = request.Name;
-            var updatedBoard = await _boardRepository.UpdateBoardAsync(board);
+            
+            board.Name = request.Name ?? board.Name;
+            var updatedBoard = await _boardRepository.UpdateBoardAsync(board, request.OrderIndex);
             return updatedBoard == null ? null : new BoardDTO
             {
                 Id = updatedBoard.Id,
@@ -82,7 +83,7 @@ namespace Application.Services;
         public async Task<List<BoardDTO>> GetBoardsAsync(string username)
         {
             var boards = await _boardRepository.GetBoardsAsync(username);
-            return boards.Select(board => new BoardDTO
+            return boards.OrderBy(b => b.OrderIndex).Select(board => new BoardDTO
             {
                 Id = board.Id,
                 Name = board.Name,
@@ -90,5 +91,10 @@ namespace Application.Services;
                 OwnerId = board.OwnerId,
                 IsArchived = board.IsArchived,
             }).ToList();
+        }
+        
+        public async Task<bool> DeleteBoardAsync(int boardId, string username)
+        {
+           return await _boardRepository.DeleteBoardAsync(boardId, username);
         }
     }

@@ -9,7 +9,7 @@ public interface IBoardRepository
     Task<List<Board>> GetAllBoardsAsync();
 
     Task<List<Board>> GetBoardsAsync(string username);
-    Task<Board?> UpdateBoardAsync(Board board);
+    Task<Board?> UpdateBoardAsync(Board board, int? orderIndex);
     Task<Board> GetBoardForUserAsync(int boardId, string username);
-    Task<bool> DeleteBoardAsync(int id);
+    Task<bool> DeleteBoardAsync(int id, string username);
 }
